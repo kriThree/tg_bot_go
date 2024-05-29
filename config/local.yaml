@@ -1,0 +1,7 @@
+env: "local"
+token: "7165107263:AAHLMRzen21jVlI_A5uSlOVUBT2z5N2d8nA"
+rules:
+  main_chat: "-1002189379540"
+  owner: "5887704592"
+storage:
+  path: "storage/storage.db"
