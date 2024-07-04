@@ -2,7 +2,7 @@ package botapp
 
 import (
 	"english_learn/internal/bot"
-	botHandlers "english_learn/internal/bot/handlers"
+	"english_learn/internal/bot/controller"
 	"log/slog"
 )
 
@@ -16,8 +16,8 @@ type App struct {
 	botServer BotServer
 }
 
-func New(log *slog.Logger, token string, botUsecase botHandlers.DefinitionUscase) *App {
-	botServer := bot.New(token, log, botUsecase)
+func New(log *slog.Logger, token string, controller * controller.Controller) *App {
+	botServer := bot.New(token, log, controller)
 
 	return &App{token: token, l: log, botServer: botServer}
 }

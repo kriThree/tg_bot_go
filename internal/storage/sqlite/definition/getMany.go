@@ -38,8 +38,8 @@ func (s Definition) getManyByFilter(ctx context.Context, filter string, args ...
 	return definitions, nil
 }
 
-func (s Definition) GetManyDefinitionsByDate(ctx context.Context, date string) ([]models.Definition, error) {
+func (s Definition) GetMany(ctx context.Context) ([]models.Definition, error) {
 
-	return s.getManyByFilter(ctx, "WHERE created_at = ?", date)
+	return s.getManyByFilter(ctx, "WHERE created_at = ?")
 
 }

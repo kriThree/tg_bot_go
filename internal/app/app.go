@@ -2,7 +2,9 @@ package app
 
 import (
 	botapp "english_learn/internal/app/bot"
-	definition_sevice "english_learn/internal/service/definition"
+	"english_learn/internal/bot/controller"
+	definition_service "english_learn/internal/service/definitionService"
+	user_service "english_learn/internal/service/userService"
 	"english_learn/internal/storage/sqlite"
 	"log/slog"
 )
@@ -19,9 +21,12 @@ func New(log *slog.Logger, token string, storagePath string) *App {
 		panic(err)
 	}
 
-	botService := definition_sevice.New(log, storage.Definition)
+	definitionService := definition_service.New(log, storage.Definition, storage.Meaning)
+	userService := user_service.New(log, storage.User)
 
-	botApp := botapp.New(log, token, botService)
+	controller := controller.New(log, definitionService, userService)
+
+	botApp := botapp.New(log, token, controller)
 
 	return &App{
 		bot: *botApp,

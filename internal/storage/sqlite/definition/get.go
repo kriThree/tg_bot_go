@@ -9,7 +9,7 @@ import (
 	"fmt"
 )
 
-func (d Definition) GetDefinition(ctx context.Context, id string) (models.Definition, error) {
+func (d Definition) Get(ctx context.Context, id string) (models.Definition, error) {
 
 	const op = "storage.definition.Get"
 

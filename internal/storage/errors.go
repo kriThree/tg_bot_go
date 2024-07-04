@@ -17,4 +17,5 @@ var (
 	InternalError         = new("internal server error")
 	DefinitionNotFound    = new("definition not found")
 	MeaningNotFound       = new("meaning not found")
+	UserNotFound          = new("user not found")
 )

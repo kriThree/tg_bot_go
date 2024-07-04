@@ -2,14 +2,14 @@ package definition
 
 import (
 	"context"
-	"english_learn/internal/domain/models"
 	storage "english_learn/internal/storage"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 )
 
-func (s Definition) AddDefinition(ctx context.Context, definition models.Definition) (string, error) {
+func (s Definition) Add(ctx context.Context, word string) (string, error) {
 
 	const op = "storage.definition.Add"
 
@@ -24,8 +24,8 @@ func (s Definition) AddDefinition(ctx context.Context, definition models.Definit
 	_, err = stmt.ExecContext(
 		ctx,
 		id,
-		definition.Word,
-		definition.CreatedAt,
+		word,
+		time.Now(),
 	)
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", op, storage.InternalError)

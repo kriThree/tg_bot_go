@@ -1,4 +1,4 @@
-package definition_sevice
+package definition_service
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 
 func (s *BotService) GetDefinition(ctx context.Context, word string) (models.Definition, error) {
 
-	definition, err := s.dp.GetDefinition(ctx, word)
+	definition, err := s.dp.Get(ctx, word)
 
 	if err != nil {
 		return models.Definition{}, err
