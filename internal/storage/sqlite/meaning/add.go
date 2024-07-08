@@ -15,7 +15,7 @@ func (s Meaning) Add(
 	definitionId string,
 ) (string, error) {
 
-	const op = "storage.meaning.Add"
+	const op = "sqlite.meaning.Add"
 
 	stmt, err := s.db.Prepare("INSERT INTO meanings (id, definition_id, part_of_speach,value) VALUES (?, ?, ?, ?)")
 
@@ -33,7 +33,7 @@ func (s Meaning) Add(
 		meaning.Value,
 	)
 	if err != nil {
-		return "", fmt.Errorf("%s: %w", op, storage.InternalError)
+		return "", fmt.Errorf("%s: %w", op, storage.InternalErr)
 	}
 
 	return id, nil

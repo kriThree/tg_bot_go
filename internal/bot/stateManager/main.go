@@ -16,7 +16,7 @@ type State struct {
 }
 
 type UserState struct {
-	ID        int
+	TgID      int
 	Operation string
 	Creatng   CreatingParams
 	DbId      string

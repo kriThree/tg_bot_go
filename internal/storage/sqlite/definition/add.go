@@ -11,7 +11,7 @@ import (
 
 func (s Definition) Add(ctx context.Context, word string) (string, error) {
 
-	const op = "storage.definition.Add"
+	const op = "sqlite.definition.Add"
 
 	stmt, err := s.db.Prepare("INSERT INTO definitions (id, word, created_at) VALUES (?, ?, ?)")
 
@@ -28,7 +28,7 @@ func (s Definition) Add(ctx context.Context, word string) (string, error) {
 		time.Now(),
 	)
 	if err != nil {
-		return "", fmt.Errorf("%s: %w", op, storage.InternalError)
+		return "", fmt.Errorf("%s: %w", op, storage.InternalErr)
 	}
 
 	return id, nil

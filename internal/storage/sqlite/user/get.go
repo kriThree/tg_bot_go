@@ -22,7 +22,7 @@ func (s User) GetById(ctx context.Context, id string) (models.User, error) {
 	err = row.Scan(&user.ID, &user.TGID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return models.User{}, fmt.Errorf("%s: %w", op, storage.UserNotFound)
+			return models.User{}, fmt.Errorf("%s: %w", op, storage.UserNotFoundErr)
 		}
 		return models.User{}, fmt.Errorf("%s: %w", op, err)
 	}
@@ -30,7 +30,7 @@ func (s User) GetById(ctx context.Context, id string) (models.User, error) {
 }
 
 func (s User) GetByTgId(ctx context.Context, tgId int) (models.User, error) {
-	const op = "storage.user.GetByTgId"
+	const op = "sqlite.user.GetByTgId"
 
 	stmt, err := s.db.Prepare("SELECT id, tg_id FROM users WHERE tg_id = ?")
 	if err != nil {
@@ -42,7 +42,7 @@ func (s User) GetByTgId(ctx context.Context, tgId int) (models.User, error) {
 	err = row.Scan(&user.ID, &user.TGID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return models.User{}, fmt.Errorf("%s: %w", op, storage.UserNotFound)
+			return models.User{}, fmt.Errorf("%s: %w", op, storage.UserNotFoundErr)
 		}
 		return models.User{}, fmt.Errorf("%s: %w", op, err)
 	}

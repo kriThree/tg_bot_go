@@ -1,47 +1,68 @@
 package controller
 
 import (
-	"context"
 	handlers "english_learn/internal/bot/controller/handlers"
 	"english_learn/internal/bot/controller/middlewares"
+	"english_learn/internal/bot/controller/utils"
 	statemanager "english_learn/internal/bot/stateManager"
-
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-type Router func(ctx context.Context, update tgbotapi.Update, uState *statemanager.UserState)
+func createRouter(h *handlers.BotHandlers, m *middlewares.BotMiddlewares) utils.Handler {
 
-func createRouter(h *handlers.BotHandlers, m *middlewares.Middleware) Router {
-	return func(ctx context.Context, update tgbotapi.Update, uState *statemanager.UserState) {
+	middlewarer := createMiddlewarer(m.PutUser)
 
-		ctx = context.Background()
+	return func(ctx utils.AppContext) {
 
-		if uState.Operation == "" {
-			h.Start(update, uState)
+		err := middlewarer(ctx)
+
+		if err != nil {
 			return
 		}
-		if update.Message == nil {
-			if update.CallbackQuery != nil {
-				switch update.CallbackQuery.Data {
+
+		if ctx.State.Operation == "" {
+			h.Start(ctx)
+			return
+		}
+
+		if ctx.Update.Message == nil {
+			if ctx.Update.CallbackQuery != nil {
+				switch ctx.Update.CallbackQuery.Data {
 				case handlers.SAVE_DEFINITION_END:
-					h.SaveDefinitionEnd(ctx, update, uState)
+					h.SaveDefinitionEnd(ctx)
 				}
 			}
 			return
 		} else {
-			switch update.Message.Text {
+			switch ctx.Update.Message.Text {
 			case handlers.SAVE_DEFINITION_QUERY:
-				h.SaveDefinitionQuery(ctx, update, uState)
+				h.SaveDefinitionQuery(ctx)
 			default:
-				switch uState.Operation {
+				switch ctx.State.Operation {
 				case statemanager.SAVE_DEFINITION_WAIT_NAME:
-					h.SaveDefinitionAddName(ctx, update, uState)
+					h.SaveDefinitionAddName(ctx)
 				case statemanager.SAVE_DEFINITION_WAIT_MEANING:
-					h.SaveDefinitionAddMean(ctx, update, uState)
+					h.SaveDefinitionAddMean(ctx)
 				default:
-					h.Start(update, uState)
+					h.Start(ctx)
 				}
 			}
 		}
 	}
+}
+
+type Middleware func(ctx utils.AppContext) error
+
+func createMiddlewarer(middlewares ...Middleware) Middleware {
+	return func(ctx utils.AppContext) error {
+		for _, middleware := range middlewares {
+
+			if err := middleware(ctx); err != nil {
+				return err
+			}
+
+			return nil
+		}
+		return nil
+	}
+
 }

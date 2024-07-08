@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"english_learn/internal/bot/controller/utils"
 	statemanager "english_learn/internal/bot/stateManager"
 	"english_learn/internal/domain/models"
 	"fmt"
@@ -11,57 +12,62 @@ import (
 
 var tags = []string{"noun", "verb", "adjective", "adverb"}
 
-func (h *BotHandlers) SaveDefinitionQuery(ctx context.Context, update tgbotapi.Update, state *statemanager.UserState) {
+func (h *BotHandlers) SaveDefinitionQuery(ctx utils.AppContext) {
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Write your definition")
+	msg := tgbotapi.NewMessage(ctx.Update.Message.Chat.ID, "Write your definition")
 
 	msg.ReplyMarkup = tgbotapi.NewRemoveKeyboard(true)
 
-	state.Operation = statemanager.SAVE_DEFINITION_WAIT_NAME
+	ctx.State.Operation = statemanager.SAVE_DEFINITION_WAIT_NAME
 
 	h.api.Send(msg)
 
 }
 
-func (h *BotHandlers) SaveDefinitionAddName(ctx context.Context, update tgbotapi.Update, state *statemanager.UserState) {
-	state.Creatng.Name = update.Message.Text
+func (h *BotHandlers) SaveDefinitionAddName(ctx utils.AppContext) {
+	ctx.State.Creatng.Name = ctx.Update.Message.Text
 
-	state.Operation = statemanager.SAVE_DEFINITION_WAIT_MEANING
+	ctx.State.Operation = statemanager.SAVE_DEFINITION_WAIT_MEANING
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Write mean of your definition")
+	msg := tgbotapi.NewMessage(ctx.Update.Message.Chat.ID, "Write mean of your definition")
 
 	h.api.Send(msg)
 }
 
-func (h *BotHandlers) SaveDefinitionAddMean(ctx context.Context, update tgbotapi.Update, state *statemanager.UserState) {
-	state.Creatng.Mean = update.Message.Text
+func (h *BotHandlers) SaveDefinitionAddMean(ctx utils.AppContext) {
+	ctx.State.Creatng.Mean = ctx.Update.Message.Text
 
 	btns := make([]tgbotapi.InlineKeyboardButton, 0)
 	for _, tag := range tags {
 		btns = append(btns, tgbotapi.NewInlineKeyboardButtonData(tag, fmt.Sprintf("%v_%v", SAVE_DEFINITION_END, tag)))
 	}
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Select tag of this pair")
+	msg := tgbotapi.NewMessage(ctx.Update.Message.Chat.ID, "Select tag of this pair")
 
 	msg.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(btns)
 
 	h.api.Send(msg)
 }
 
-func (h *BotHandlers) SaveDefinitionEnd(ctx context.Context, update tgbotapi.Update, state *statemanager.UserState) {
+func (h *BotHandlers) SaveDefinitionEnd(ctx utils.AppContext) {
 
-	_, err := h.hu.AddDefinition(context.TODO(), state.Creatng.Name, models.Meaning{PartOfSpeach: state.Creatng.Tag, Value: state.Creatng.Mean})
+	_, err := h.hu.AddDefinition(
+		context.TODO(),
+		ctx.State.Creatng.Name,
+		models.Meaning{PartOfSpeach: ctx.State.Creatng.Tag, Value: ctx.State.Creatng.Mean},
+		ctx.State.TgID,
+	)
 
 	if err != nil {
 
 		return
 	}
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Definition saved")
+	msg := tgbotapi.NewMessage(ctx.Update.Message.Chat.ID, "Definition saved")
 
 	msg.ReplyMarkup = tgbotapi.NewRemoveKeyboard(true)
 
-	state.Operation = statemanager.BASE
+	ctx.State.Operation = statemanager.BASE
 
 	h.api.Send(msg)
 

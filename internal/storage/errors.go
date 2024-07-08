@@ -13,9 +13,10 @@ func new(text string) StorageError {
 }
 
 var (
-	MeaningAlreadyDefined = new("meaning already defined")
-	InternalError         = new("internal server error")
-	DefinitionNotFound    = new("definition not found")
-	MeaningNotFound       = new("meaning not found")
-	UserNotFound          = new("user not found")
+	MeaningAlreadyDefinedErr = new("meaning already defined")
+	InternalErr              = new("internal server error")
+	DefinitionNotFoundErr    = new("definition not found")
+	MeaningNotFoundErr       = new("meaning not found")
+	UserNotFoundErr          = new("user not found")
+	UserAlreadyAddedErr      = new("user already added")
 )

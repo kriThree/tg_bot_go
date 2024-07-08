@@ -7,7 +7,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-func UserInApp(ctx context.Context, update tgbotapi.Update, state *statemanager.State) (int, error) {
+func CtxPreporation(ctx context.Context, update tgbotapi.Update, state *statemanager.State) (int, AppContext, error) {
 
 	var id int
 	if update.Message != nil {
@@ -17,15 +17,17 @@ func UserInApp(ctx context.Context, update tgbotapi.Update, state *statemanager.
 	}
 
 	if id == 0 {
-		return 0, NotValidUpdateErr
+		return 0, AppContext{}, NotValidUpdateErr
 	}
 	if state.GetUser(id) == (statemanager.UserState{}) {
 		state.SetUser(id, statemanager.UserState{
 			Operation: statemanager.BASE,
-			ID:        id,
+			TgID:      id,
 		})
 	}
 
-	return id, nil
+	uState := state.GetUser(id)
+
+	return id, AppContext{Update: update, State: &uState}, nil
 
 }

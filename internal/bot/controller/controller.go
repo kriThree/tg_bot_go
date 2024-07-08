@@ -34,27 +34,22 @@ func (c *Controller) Handle(updates <-chan tgbotapi.Update, api *tgbotapi.BotAPI
 
 	state := statemanager.New()
 
-	router := createRouter(handlers.New(c.l, c.hu, api))
+	router := createRouter(handlers.New(c.l, c.hu, api), middlewares.New(c.l, c.mu, api))
 
 	for update := range updates {
 
 		ctx := context.Background()
 
-		id, err := utils.UserInApp(ctx, update, state)
+		id, appCtx, err := utils.CtxPreporation(ctx, update, state)
 
 		if err != nil {
-			log.Error("Middleware error", slog.Any("error", err))
+			log.Error("User error", slog.Any("error", err))
 			continue
 		}
 
-		log.Info("Message", slog.Any("update", update))
-
-		var a statemanager.UserState
-
 		if update.Message != nil {
-			a = state.GetUser(id)
-			router(ctx, update, &a)
-			state.SetUser(id, a)
+			router(appCtx)
+			state.SetUser(id, *appCtx.State)
 		}
 		log.Info("State", slog.Any("state", state))
 

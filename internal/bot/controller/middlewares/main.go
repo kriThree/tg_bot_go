@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"context"
+	"english_learn/internal/domain/models"
 	"log/slog"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
@@ -14,10 +15,9 @@ type BotMiddlewares struct {
 }
 
 type MiddlewaresUsecase interface {
-	IsUserExist(ctx context.Context, id int) (bool, error)
-	AddUser(ctx context.Context, id int) (string, error)
+	UserTgInteraction(ctx context.Context, id int) (models.User, error)
 }
 
-func New() *BotMiddlewares {
-	return &BotMiddlewares{}
+func New(l *slog.Logger, mu MiddlewaresUsecase, api *tgbotapi.BotAPI) *BotMiddlewares {
+	return &BotMiddlewares{l: l, mu: mu, api: api}
 }

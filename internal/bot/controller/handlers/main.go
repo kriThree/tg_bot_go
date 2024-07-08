@@ -15,7 +15,7 @@ type BotHandlers struct {
 }
 
 type HandlersUsecase interface {
-	AddDefinition(ctx context.Context, definitionWord string, meaning models.Meaning) (string, error)
+	AddDefinition(ctx context.Context, definitionWord string, meaning models.Meaning, tgId int) (string, error)
 	GetDefinition(ctx context.Context, id string) (models.Definition, error)
 	GetDefinitions(ctx context.Context) ([]models.Definition, error)
 }

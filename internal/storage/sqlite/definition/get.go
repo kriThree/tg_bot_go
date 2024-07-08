@@ -11,7 +11,7 @@ import (
 
 func (d Definition) Get(ctx context.Context, id string) (models.Definition, error) {
 
-	const op = "storage.definition.Get"
+	const op = "sqlite.definition.Get"
 
 	stmt, err := d.db.Prepare("SELECT id, word, created_at FROM definitions WHERE id = ?")
 
@@ -26,7 +26,7 @@ func (d Definition) Get(ctx context.Context, id string) (models.Definition, erro
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return models.Definition{}, fmt.Errorf("%s: %w", op, storage.DefinitionNotFound)
+			return models.Definition{}, fmt.Errorf("%s: %w", op, storage.DefinitionNotFoundErr)
 		}
 		return models.Definition{}, fmt.Errorf("%s: %w", op, err)
 	}

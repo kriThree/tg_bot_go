@@ -8,7 +8,7 @@ import (
 
 func (s Definition) getManyByFilter(ctx context.Context, filter string, args ...interface{}) ([]models.Definition, error) {
 
-	const op = "storage.definition.GetMany"
+	const op = "sqlite.definition.GetMany"
 
 	stmt, err := s.db.Prepare("SELECT id, word, created_at FROM definitions " + filter)
 

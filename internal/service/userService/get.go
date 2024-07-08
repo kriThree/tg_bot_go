@@ -2,22 +2,22 @@ package user_service
 
 import (
 	"context"
+	"english_learn/internal/domain/models"
 	"log/slog"
 )
 
-func (s UserService) IsUserExist(ctx context.Context, id int) (bool, error) {
+func (s UserService) GetUserByTgId(ctx context.Context, tgId int) (models.User, error) {
 
 	const op = "user_service.get"
 
 	log := s.l.With(slog.String("op", op))
 
-	_, err := s.up.GetByTgId(ctx, id)
+	user, err := s.up.GetByTgId(ctx, tgId)
 
 	if err != nil {
 		log.Error("Get user error", slog.Any("error", err))
-		return false, nil
+		return models.User{}, nil
 	}
 
-	return true, nil
-
+	return user, nil
 }
