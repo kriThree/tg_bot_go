@@ -47,10 +47,11 @@ func (c *Controller) Handle(updates <-chan tgbotapi.Update, api *tgbotapi.BotAPI
 			continue
 		}
 
-		if update.Message != nil {
-			router(appCtx)
-			state.SetUser(id, *appCtx.State)
-		}
+		log.Info("Update", slog.Any("update", update))
+
+		router(appCtx)
+		state.SetUser(id, *appCtx.State)
+
 		log.Info("State", slog.Any("state", state))
 
 	}

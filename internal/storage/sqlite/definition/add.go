@@ -4,16 +4,15 @@ import (
 	"context"
 	storage "english_learn/internal/storage"
 	"fmt"
-	"time"
 
 	"github.com/google/uuid"
 )
 
-func (s Definition) Add(ctx context.Context, word string) (string, error) {
+func (s Definition) Add(ctx context.Context, word string, userId string) (string, error) {
 
 	const op = "sqlite.definition.Add"
 
-	stmt, err := s.db.Prepare("INSERT INTO definitions (id, word, created_at) VALUES (?, ?, ?)")
+	stmt, err := s.db.Prepare("INSERT INTO definitions (id, word, user_id) VALUES (?, ?, ?)")
 
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", op, err)
@@ -25,7 +24,7 @@ func (s Definition) Add(ctx context.Context, word string) (string, error) {
 		ctx,
 		id,
 		word,
-		time.Now(),
+		userId,
 	)
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", op, storage.InternalErr)

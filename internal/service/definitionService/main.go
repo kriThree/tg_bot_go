@@ -12,7 +12,7 @@ type BotService struct {
 	mp MeaningProvider
 }
 type DefinitionProvider interface {
-	Add(ctx context.Context, word string) (string, error)
+	Add(ctx context.Context, word string, userId string) (string, error)
 	Get(ctx context.Context, id string) (models.Definition, error)
 	GetMany(ctx context.Context) ([]models.Definition, error)
 }

@@ -22,6 +22,7 @@ func New(log *slog.Logger, token string, storagePath string) *App {
 	}
 
 	definitionService := definition_service.New(log, storage.Definition, storage.Meaning)
+	
 	userService := user_service.New(log, storage.User)
 
 	controller := controller.New(log, definitionService, userService)

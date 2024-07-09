@@ -5,6 +5,8 @@ import (
 	"english_learn/internal/bot/controller/middlewares"
 	"english_learn/internal/bot/controller/utils"
 	statemanager "english_learn/internal/bot/stateManager"
+	"fmt"
+	"strings"
 )
 
 func createRouter(h *handlers.BotHandlers, m *middlewares.BotMiddlewares) utils.Handler {
@@ -25,9 +27,9 @@ func createRouter(h *handlers.BotHandlers, m *middlewares.BotMiddlewares) utils.
 		}
 
 		if ctx.Update.Message == nil {
+			fmt.Println("message is nil", ctx.Update.CallbackQuery, ctx.Update.CallbackQuery.Data, strings.Contains(ctx.Update.CallbackQuery.Data, handlers.SAVE_DEFINITION_END))
 			if ctx.Update.CallbackQuery != nil {
-				switch ctx.Update.CallbackQuery.Data {
-				case handlers.SAVE_DEFINITION_END:
+				if strings.Contains(ctx.Update.CallbackQuery.Data, handlers.SAVE_DEFINITION_END) {
 					h.SaveDefinitionEnd(ctx)
 				}
 			}

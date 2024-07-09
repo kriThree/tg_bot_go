@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS definitions (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
-CREATE TABLE IF NOT EXISTS meaning (
+CREATE TABLE IF NOT EXISTS meanings (
     id TEXT PRIMARY KEY,
     definition_id TEXT NOT NULL,
     part_of_speach TEXT,

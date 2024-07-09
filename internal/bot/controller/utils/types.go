@@ -8,6 +8,8 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
+const EVENT_SEPARATOR = "|"
+
 type Handler func(appCtx AppContext)
 
 type AppContext struct {
@@ -25,7 +27,7 @@ func (m AppContext) Deadline() (deadline time.Time, ok bool) {
 }
 
 func (m AppContext) Done() <-chan struct{} {
-	return m.done 
+	return m.done
 }
 
 func (m AppContext) Err() error {
